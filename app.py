@@ -397,9 +397,9 @@ def construir_variables(
         # VARIABLES DUMMY DEL TIPO DE COLOCACIÓN
         # ----------------------------------------------------
 
-        "Tipo Colocacion_Manual": int(tipo == "Manual"),
+        "Tipo_Colocacion_Manual": int(tipo == "Manual"),
 
-        "Tipo Colocacion_Pavimentadora": int(
+        "Tipo_Colocacion_Pavimentadora": int(
             tipo == "Pavimentadora"
         ),
 
