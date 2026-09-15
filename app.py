@@ -459,7 +459,16 @@ def preparar_entrada(variables):
             "Afino/Agueso",
             "Ac*Edad"
         ]
+        
+# ---------------------------------------------------------
+# GARANTIZAR FEATURE ENGINEERING
+# ---------------------------------------------------------
 
+if "Afino/Agueso" not in variables:
+    variables["Afino/Agueso"] = (
+        variables["Agregado Fino (%)"] /
+        variables["Agregado Grueso (%)"]
+    )
 
     # --------------------------------------------------------
     # COMPROBAR VARIABLES FALTANTES
