@@ -434,28 +434,11 @@ def construir_variables(
 
 def preparar_entrada(variables):
 
-    # Variables exactas utilizadas por el scaler
-    features_esperadas = [
-        "Diseño",
-        "Relacion Agua/Cemento",
-        "Agregado Fino (%)",
-        "Agregado Grueso (%)",
-        "Slump (in)",
-        "Edad (dias)",
-        "Inversa_AC",
-        "Edad^2",
-        "Afino/Agueso",
-        "Ac*Edad",
-        "Diseño_Final_175_Manual",
-        "Diseño_Final_210_Manual",
-        "Diseño_Final_280_Manual",
-        "Diseño_Final_350_Manual",
-        "Diseño_Final_350_Pavimentadora",
-        "Tipo_Colocacion_Manual",
-        "Tipo_Colocacion_Pavimentadora"
-    ]
+    # Usar exactamente los nombres y el orden con los que
+    # fue entrenado el scaler
+    features_esperadas = list(scaler.feature_names_in_)
 
-    # Garantizar feature engineering
+    # Crear/asegurar variables derivadas
     variables["Afino/Agueso"] = (
         variables["Agregado Fino (%)"] /
         variables["Agregado Grueso (%)"]
@@ -474,7 +457,20 @@ def preparar_entrada(variables):
         variables["Edad (dias)"]
     )
 
-    # Comprobar que todas las variables existan
+    # Compatibilidad con los nombres antiguos del scaler
+    variables["Tipo Colocacion_Manual"] = (
+        int(variables["Tipo_Colocacion_Manual"] == 1)
+        if "Tipo_Colocacion_Manual" in variables
+        else 0
+    )
+
+    variables["Tipo Colocacion_Pavimentadora"] = (
+        int(variables["Tipo_Colocacion_Pavimentadora"] == 1)
+        if "Tipo_Colocacion_Pavimentadora" in variables
+        else 0
+    )
+
+    # Verificar que no falte ninguna variable
     faltantes = [
         variable
         for variable in features_esperadas
@@ -483,10 +479,12 @@ def preparar_entrada(variables):
 
     if faltantes:
         raise ValueError(
-            f"Faltan variables requeridas por el scaler: {faltantes}"
+            "Faltan variables requeridas por el scaler: "
+            f"{faltantes}"
         )
 
-    # Crear DataFrame exactamente en el orden del entrenamiento
+    # Construir DataFrame respetando EXACTAMENTE
+    # el orden utilizado durante el entrenamiento
     entrada = pd.DataFrame(
         [{
             variable: variables[variable]
@@ -495,7 +493,6 @@ def preparar_entrada(variables):
     )
 
     return entrada, features_esperadas
-
 
 def realizar_prediccion(
     diseno,
