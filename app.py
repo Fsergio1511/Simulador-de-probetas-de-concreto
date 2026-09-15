@@ -434,46 +434,112 @@ def construir_variables(
 
 def preparar_entrada(variables):
 
-    # Nombres y orden exactos del scaler
-    features_esperadas = list(scaler.feature_names_in_)
+    # ============================================================
+    # VARIABLES EXACTAS DEL SCALER
+    # ============================================================
 
-    # Variables derivadas
-    variables["Inversa_AC"] = (
-        1 / variables["Relacion Agua/Cemento"]
+    features_esperadas = [
+        "Diseño",
+        "Relacion Agua/Cemento",
+        "Agregado Fino (%)",
+        "Agregado Grueso (%)",
+        "Slump (in)",
+        "Edad (dias)",
+        "Inversa_AC",
+        "Edad^2",
+        "Afino/Agueso",
+        "Ac*Edad",
+        "Diseño_Final_175_Manual",
+        "Diseño_Final_210_Manual",
+        "Diseño_Final_280_Manual",
+        "Diseño_Final_350_Manual",
+        "Diseño_Final_350_Pavimentadora",
+        "Tipo Colocacion_Manual",
+        "Tipo Colocacion_Pavimentadora"
+    ]
+
+    # ============================================================
+    # OBTENER VARIABLES BASE
+    # ============================================================
+
+    diseno = variables["Diseño"]
+    ac = variables["Relacion Agua/Cemento"]
+    fino = variables["Agregado Fino (%)"]
+    grueso = variables["Agregado Grueso (%)"]
+    slump = variables["Slump (in)"]
+    edad = variables["Edad (dias)"]
+
+    # ============================================================
+    # VARIABLES DERIVADAS
+    # ============================================================
+
+    inversa_ac = 1 / ac
+    edad_2 = edad ** 2
+    afino_agueso = fino / grueso
+    ac_edad = ac * edad
+
+    # ============================================================
+    # VARIABLES CATEGÓRICAS
+    # ============================================================
+
+    tipo_manual = int(
+        variables.get("Tipo_Colocacion_Manual", 0) == 1
     )
 
-    variables["Edad^2"] = (
-        variables["Edad (dias)"] ** 2
+    tipo_pavimentadora = int(
+        variables.get("Tipo_Colocacion_Pavimentadora", 0) == 1
     )
 
-    variables["Afino/Agueso"] = (
-        variables["Agregado Fino (%)"] /
-        variables["Agregado Grueso (%)"]
-    )
+    # ============================================================
+    # CONSTRUIR LAS 17 VARIABLES
+    # ============================================================
 
-    variables["Ac*Edad"] = (
-        variables["Relacion Agua/Cemento"] *
-        variables["Edad (dias)"]
-    )
+    entrada = pd.DataFrame([{
 
-    # Compatibilidad con los nombres utilizados
-    # durante el entrenamiento
-    variables["Tipo Colocacion_Manual"] = (
-        int(variables.get("Tipo_Colocacion_Manual", 0) == 1)
-    )
+        "Diseño": diseno,
 
-    variables["Tipo Colocacion_Pavimentadora"] = (
-        int(variables.get("Tipo_Colocacion_Pavimentadora", 0) == 1)
-    )
+        "Relacion Agua/Cemento": ac,
 
-    # Construir entrada respetando exactamente
-    # el orden utilizado por el scaler
-    entrada = pd.DataFrame(
-        [{
-            variable: variables[variable]
-            for variable in features_esperadas
-        }]
-    )
+        "Agregado Fino (%)": fino,
+
+        "Agregado Grueso (%)": grueso,
+
+        "Slump (in)": slump,
+
+        "Edad (dias)": edad,
+
+        "Inversa_AC": inversa_ac,
+
+        "Edad^2": edad_2,
+
+        "Afino/Agueso": afino_agueso,
+
+        "Ac*Edad": ac_edad,
+
+        "Diseño_Final_175_Manual":
+            int(diseno == 175 and tipo_manual == 1),
+
+        "Diseño_Final_210_Manual":
+            int(diseno == 210 and tipo_manual == 1),
+
+        "Diseño_Final_280_Manual":
+            int(diseno == 280 and tipo_manual == 1),
+
+        "Diseño_Final_350_Manual":
+            int(diseno == 350 and tipo_manual == 1),
+
+        "Diseño_Final_350_Pavimentadora":
+            int(diseno == 350 and tipo_pavimentadora == 1),
+
+        "Tipo Colocacion_Manual":
+            tipo_manual,
+
+        "Tipo Colocacion_Pavimentadora":
+            tipo_pavimentadora
+    }])
+
+    # Asegurar exactamente el orden del entrenamiento
+    entrada = entrada[features_esperadas]
 
     return entrada, features_esperadas
 def realizar_prediccion(
