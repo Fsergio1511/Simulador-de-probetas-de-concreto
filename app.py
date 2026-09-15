@@ -483,30 +483,18 @@ def preparar_entrada(variables):
     # VERIFICAR VARIABLES FALTANTES
     # ============================================================
 
-    faltantes = [
-        variable
-        for variable in features_esperadas
-        if variable not in variables
-    ]
-
-    if faltantes:
-        raise ValueError(
-            "Faltan variables requeridas por el scaler: "
-            f"{faltantes}"
-        )
-
-    # ============================================================
+       # ============================================================
     # CREAR ENTRADA EN EL MISMO ORDEN DEL ENTRENAMIENTO
     # ============================================================
 
-    entrada = pd.DataFrame(
-        [{
-            variable: variables[variable]
-            for variable in features_esperadas
-        }]
-    )
+entrada = pd.DataFrame(
+    [{
+        variable: variables[variable]
+        for variable in features_esperadas
+    }]
+)
 
-    return entrada, features_esperadas
+return entrada, features_esperadas
 def realizar_prediccion(
     diseno,
     tipo,
@@ -536,7 +524,7 @@ def realizar_prediccion(
     # --------------------------------------------------------
 
     entrada_escalada = scaler.transform(
-        entrada
+    entrada.to_numpy()
     )
 
     # --------------------------------------------------------
