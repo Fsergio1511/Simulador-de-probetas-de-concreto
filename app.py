@@ -434,9 +434,9 @@ def construir_variables(
 
 def preparar_entrada(variables):
 
-    # --------------------------------------------------------
+    # ---------------------------------------------------------
     # OBTENER LAS VARIABLES EXACTAS DEL SCALER
-    # --------------------------------------------------------
+    # ---------------------------------------------------------
 
     if hasattr(scaler, "feature_names_in_"):
 
@@ -459,20 +459,23 @@ def preparar_entrada(variables):
             "Afino/Agueso",
             "Ac*Edad"
         ]
-        
-# ---------------------------------------------------------
-# GARANTIZAR FEATURE ENGINEERING
-# ---------------------------------------------------------
 
-if "Afino/Agueso" not in variables:
-    variables["Afino/Agueso"] = (
-        variables["Agregado Fino (%)"] /
-        variables["Agregado Grueso (%)"]
-    )
 
-    # --------------------------------------------------------
+    # ---------------------------------------------------------
+    # GARANTIZAR FEATURE ENGINEERING
+    # ---------------------------------------------------------
+
+    if "Afino/Agueso" not in variables:
+
+        variables["Afino/Agueso"] = (
+            variables["Agregado Fino (%)"] /
+            variables["Agregado Grueso (%)"]
+        )
+
+
+    # ---------------------------------------------------------
     # COMPROBAR VARIABLES FALTANTES
-    # --------------------------------------------------------
+    # ---------------------------------------------------------
 
     faltantes = [
         variable
@@ -488,9 +491,9 @@ if "Afino/Agueso" not in variables:
         )
 
 
-    # --------------------------------------------------------
+    # ---------------------------------------------------------
     # CREAR DATAFRAME EN EL ORDEN EXACTO
-    # --------------------------------------------------------
+    # ---------------------------------------------------------
 
     entrada = pd.DataFrame(
         [
@@ -500,6 +503,7 @@ if "Afino/Agueso" not in variables:
             }
         ]
     )
+
 
     return entrada, features_esperadas
 
