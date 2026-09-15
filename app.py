@@ -475,6 +475,10 @@ def preparar_entrada(variables):
         int(variables.get("Tipo_Colocacion_Pavimentadora", 0) == 1)
     )
 
+    variables["Afino/Agueso"] = (
+    variables["Agregado Fino (%)"] /
+    variables["Agregado Grueso (%)"]
+    )
     # ============================================================
     # VERIFICAR VARIABLES FALTANTES
     # ============================================================
