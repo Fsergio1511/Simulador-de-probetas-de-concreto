@@ -434,49 +434,47 @@ def construir_variables(
 
 def preparar_entrada(variables):
 
-    # ---------------------------------------------------------
-    # OBTENER LAS VARIABLES EXACTAS DEL SCALER
-    # ---------------------------------------------------------
+    # Variables exactas utilizadas por el scaler
+    features_esperadas = [
+        "Diseño",
+        "Relacion Agua/Cemento",
+        "Agregado Fino (%)",
+        "Agregado Grueso (%)",
+        "Slump (in)",
+        "Edad (dias)",
+        "Inversa_AC",
+        "Edad^2",
+        "Afino/Agueso",
+        "Ac*Edad",
+        "Diseño_Final_175_Manual",
+        "Diseño_Final_210_Manual",
+        "Diseño_Final_280_Manual",
+        "Diseño_Final_350_Manual",
+        "Diseño_Final_350_Pavimentadora",
+        "Tipo_Colocacion_Manual",
+        "Tipo_Colocacion_Pavimentadora"
+    ]
 
-    if hasattr(scaler, "feature_names_in_"):
+    # Garantizar feature engineering
+    variables["Afino/Agueso"] = (
+        variables["Agregado Fino (%)"] /
+        variables["Agregado Grueso (%)"]
+    )
 
-        features_esperadas = list(
-            scaler.feature_names_in_
-        )
+    variables["Inversa_AC"] = (
+        1 / variables["Relacion Agua/Cemento"]
+    )
 
-    else:
+    variables["Edad^2"] = (
+        variables["Edad (dias)"] ** 2
+    )
 
-        # Fallback para versiones antiguas del scaler
-        features_esperadas = [
-            "Diseño",
-            "Relacion Agua/Cemento",
-            "Agregado Fino (%)",
-            "Agregado Grueso (%)",
-            "Slump (in)",
-            "Edad (dias)",
-            "Inversa_AC",
-            "Edad^2",
-            "Afino/Agueso",
-            "Ac*Edad"
-        ]
+    variables["Ac*Edad"] = (
+        variables["Relacion Agua/Cemento"] *
+        variables["Edad (dias)"]
+    )
 
-
-    # ---------------------------------------------------------
-    # GARANTIZAR FEATURE ENGINEERING
-    # ---------------------------------------------------------
-
-    if "Afino/Agueso" not in variables:
-
-        variables["Afino/Agueso"] = (
-            variables["Agregado Fino (%)"] /
-            variables["Agregado Grueso (%)"]
-        )
-
-
-    # ---------------------------------------------------------
-    # COMPROBAR VARIABLES FALTANTES
-    # ---------------------------------------------------------
-
+    # Comprobar que todas las variables existan
     faltantes = [
         variable
         for variable in features_esperadas
@@ -484,26 +482,17 @@ def preparar_entrada(variables):
     ]
 
     if faltantes:
-
         raise ValueError(
-            "Faltan las siguientes variables requeridas "
-            f"por el scaler: {faltantes}"
+            f"Faltan variables requeridas por el scaler: {faltantes}"
         )
 
-
-    # ---------------------------------------------------------
-    # CREAR DATAFRAME EN EL ORDEN EXACTO
-    # ---------------------------------------------------------
-
+    # Crear DataFrame exactamente en el orden del entrenamiento
     entrada = pd.DataFrame(
-        [
-            {
-                variable: variables[variable]
-                for variable in features_esperadas
-            }
-        ]
+        [{
+            variable: variables[variable]
+            for variable in features_esperadas
+        }]
     )
-
 
     return entrada, features_esperadas
 
