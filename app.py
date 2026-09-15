@@ -434,10 +434,6 @@ def construir_variables(
 
 def preparar_entrada(variables):
 
-    # ============================================================
-    # NOMBRES EXACTOS UTILIZADOS POR EL SCALER
-    # ============================================================
-
     features_esperadas = list(scaler.feature_names_in_)
 
     # ============================================================
