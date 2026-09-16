@@ -206,7 +206,7 @@ st.markdown("""
     }
 
     header {
-        visibility: hidden;
+        visibility: visible;
     }
 /* ---------- BOTÓN PARA ABRIR LA BARRA LATERAL ---------- */
 
