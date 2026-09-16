@@ -594,21 +594,19 @@ def realizar_prediccion(
 # CABECERA
 # ============================================================
 
-st.markdown("""
-<div class="header-box">
-
-    <div class="header-title">
-        Predicción de Resistencia a Compresión del Concreto
-    </div>
-
-    <div class="header-subtitle">
-        Aplicación basada en un modelo de Machine Learning
-        para estimar la resistencia del concreto a partir
-        de las condiciones de diseño y ensayo.
-    </div>
-
+st.markdown(
+    """<div class="header-box">
+<div class="header-title">
+Predicción de Resistencia a Compresión del Concreto
 </div>
-""", unsafe_allow_html=True)
+<div class="header-subtitle">
+Aplicación basada en un modelo de Machine Learning
+para estimar la resistencia del concreto a partir
+de las condiciones de diseño y ensayo.
+</div>
+</div>""",
+    unsafe_allow_html=True
+)
 
 
 # ============================================================
@@ -890,26 +888,19 @@ if ejecutar:
         # ----------------------------------------------------
 
         st.markdown(
-            f"""
-            <div class="result-box">
-
-                <div class="result-label">
-                    Resistencia estimada a compresión
-                </div>
-
-                <div class="result-value">
-                    {prediccion:,.2f}
-                </div>
-
-                <div class="result-unit">
-                    kg/cm²
-                </div>
-
-            </div>
-            """,
-            unsafe_allow_html=True
+        f"""<div class="result-box">
+        <div class="result-label">
+        Resistencia estimada a compresión
+        </div>
+        <div class="result-value">
+        {prediccion:.2f}
+        </div>
+        <div class="result-unit">
+        kg/cm²
+        </div>
+        </div>""",
+        unsafe_allow_html=True
         )
-
 
         # ----------------------------------------------------
         # COMPARACIÓN
