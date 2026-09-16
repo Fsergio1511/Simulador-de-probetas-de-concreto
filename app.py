@@ -208,7 +208,12 @@ st.markdown("""
     header {
         visibility: hidden;
     }
+/* ---------- BOTÓN PARA ABRIR LA BARRA LATERAL ---------- */
 
+[data-testid="stSidebarCollapsedControl"] {
+    visibility: visible !important;
+    display: block !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
